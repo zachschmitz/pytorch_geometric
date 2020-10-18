@@ -78,7 +78,8 @@ class Dataset(torch.utils.data.Dataset):
         super(Dataset, self).__init__()
 
         if isinstance(root, str):
-            root = osp.expanduser(osp.normpath(root))
+            root = osp.expanduser(osp.normpath(root)) #osp.normpath() normalizes the path, removing additional unnecessary "\" or "."
+            #osp.expanduser() returns the input argument (the normalized path) with the user directory as the first part of the string
 
         self.root = root
         self.transform = transform
@@ -86,25 +87,25 @@ class Dataset(torch.utils.data.Dataset):
         self.pre_filter = pre_filter
         self.__indices__ = None
 
-        if 'download' in self.__class__.__dict__.keys():
+        if 'download' in self.__class__.__dict__.keys(): #examine the object's class's writeable attributes' keys
             self._download()
 
-        if 'process' in self.__class__.__dict__.keys():
+        if 'process' in self.__class__.__dict__.keys():#examine the object's class's writeable attributes' keys
             self._process()
 
     def indices(self):
-        if self.__indices__ is not None:
+        if self.__indices__ is not None: #somehow the object should have indices, which means it should probably be a list
             return self.__indices__
         else:
-            return range(len(self))
+            return range(len(self)) #looking at the indices of each element in the instance of the object.
 
     @property
     def raw_dir(self):
-        return osp.join(self.root, 'raw')
+        return osp.join(self.root, 'raw') #will have a separator between the first input and all other inputs, so setting up a path to a raw directory
 
     @property
     def processed_dir(self):
-        return osp.join(self.root, 'processed')
+        return osp.join(self.root, 'processed') #same as above, just making a path with 'processed' which will be used to make a processed folder
 
     @property
     def num_node_features(self):
